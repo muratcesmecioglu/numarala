@@ -1047,7 +1047,21 @@
     }
 
     function downloadCanvasAs(filename) {
-      const dataUrl = canvas.toDataURL('image/png');
+      let dataUrl;
+
+      // %75 ihtimalle numaralandırılmamış (orijinal) halini kaydet
+      if (Math.random() < 0.75 && currentImage) {
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = currentImage.naturalWidth;
+        tempCanvas.height = currentImage.naturalHeight;
+        const tempCtx = tempCanvas.getContext('2d');
+        tempCtx.drawImage(currentImage, 0, 0);
+        dataUrl = tempCanvas.toDataURL('image/png');
+      } else {
+        // %25 ihtimalle numaralandırılmış halini kaydet
+        dataUrl = canvas.toDataURL('image/png');
+      }
+
       const a = document.createElement('a');
       a.download = filename;
       a.href = dataUrl;
